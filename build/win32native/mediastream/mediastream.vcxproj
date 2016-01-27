@@ -113,6 +113,7 @@ if exist ..\..\..\..\msx264\ copy ..\..\..\..\msx264\build\vs\$(IntDir)*.dll "$(
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\tools\common.c" />
     <ClCompile Include="..\..\..\tools\mediastream.c" />
   </ItemGroup>
   <ItemGroup>

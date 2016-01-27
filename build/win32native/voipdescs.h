@@ -14,7 +14,7 @@ extern MSFilterDesc ms_speex_enc_desc;
 extern MSFilterDesc ms_gsm_dec_desc;
 extern MSFilterDesc ms_gsm_enc_desc;
 extern MSFilterDesc ms_speex_ec_desc;
-extern MSFilterDesc ms_conf_desc;
+//extern MSFilterDesc ms_conf_desc;
 extern MSFilterDesc ms_v4w_desc;
 extern MSFilterDesc ms_video_out_desc;
 extern MSFilterDesc ms_h263_enc_desc;
@@ -24,7 +24,7 @@ extern MSFilterDesc ms_h263_old_dec_desc;
 extern MSFilterDesc ms_mpeg4_enc_desc;
 extern MSFilterDesc ms_mpeg4_dec_desc;
 extern MSFilterDesc ms_h264_dec_desc;
-extern MSFilterDesc ms_snow_enc_desc;
+//extern MSFilterDesc ms_snow_enc_desc;
 extern MSFilterDesc ms_snow_dec_desc;
 extern MSFilterDesc ms_theora_enc_desc;
 extern MSFilterDesc ms_theora_dec_desc;
@@ -65,7 +65,7 @@ MSFilterDesc * ms_voip_filter_descs[]={
 &ms_gsm_dec_desc,
 &ms_gsm_enc_desc,
 &ms_speex_ec_desc,
-&ms_conf_desc,
+//&ms_conf_desc,
 &ms_h263_old_enc_desc,
 &ms_h263_old_dec_desc,
 &ms_h263_enc_desc,
@@ -73,7 +73,7 @@ MSFilterDesc * ms_voip_filter_descs[]={
 &ms_mpeg4_enc_desc,
 &ms_mpeg4_dec_desc,
 &ms_h264_dec_desc,
-&ms_snow_enc_desc,
+//&ms_snow_enc_desc,
 &ms_snow_dec_desc,
 &ms_theora_enc_desc,
 &ms_theora_dec_desc,

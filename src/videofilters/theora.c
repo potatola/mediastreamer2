@@ -174,6 +174,10 @@ static int enc_set_mtu(MSFilter *f, void*data){
 #define CONT_FRAGMENT 2
 #define END_FRAGMENT 3
 
+#if defined(WIN32) && !defined(__cplusplus)
+#define inline __inline
+#endif
+
 
 static inline void payload_header_set(uint8_t *buf, uint32_t ident, uint8_t ft, uint8_t tdt, uint8_t pkts){
 	uint32_t tmp;
