@@ -31,6 +31,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "mediastreamer2/msvideopresets.h"
 #include "mediastreamer2/mseventqueue.h"
 #include "private.h"
+#include "ortp/fecdriver.h"
 
 
 static void configure_recorder_output(VideoStream *stream);
