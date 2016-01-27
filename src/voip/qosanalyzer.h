@@ -56,6 +56,21 @@ extern "C" {
 		bool_t pad[3];
 	}MSSimpleQosAnalyzer;
 
+	
+	/**************************************************************************/
+	/******************** QDelay based analyzer & driver **********************/
+	/**************************************************************************/
+	typedef struct _MSQDelayQosAnalyzerDriver{
+		MSQosAnalyzer parent;
+		RtpSession *session;
+		MSFilter *venc;
+		int clockrate;
+		rtpstats_t stats[STATS_HISTORY];
+		int curindex;
+		int cur_bitrate;
+		bool_t rt_prop_doubled;
+	}MSQDelayQosAnalyzerDriver;
+
 
 	/**************************************************************************/
 	/************************* Stateful QoS analyzer **************************/

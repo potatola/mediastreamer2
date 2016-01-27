@@ -88,6 +88,7 @@ struct _MSQosAnalyzerDesc{
 
 enum _MSQosAnalyzerAlgorithm {
 	MSQosAnalyzerAlgorithmSimple,
+	MSQosAnalyzerAlgorithmQdelay,
 	MSQosAnalyzerAlgorithmStateful
 };
 typedef enum _MSQosAnalyzerAlgorithm MSQosAnalyzerAlgorithm;
@@ -131,6 +132,8 @@ MS2_PUBLIC void ms_qos_analyzer_set_on_action_suggested(MSQosAnalyzer *obj, void
  * The simple qos analyzer is an implementation of MSQosAnalyzer that performs analysis for single stream.
 **/
 MS2_PUBLIC MSQosAnalyzer * ms_simple_qos_analyzer_new(RtpSession *session);
+
+MS2_PUBLIC MSQosAnalyzer * ms_qdelay_rate_control_new(RtpSession *session, MSFilter *venc);
 
 MS2_PUBLIC MSQosAnalyzer * ms_stateful_qos_analyzer_new(RtpSession *session);
 /**
@@ -204,6 +207,8 @@ MS2_PUBLIC MSBitrateController *ms_audio_bitrate_controller_new(RtpSession *sess
  * \endcode
 **/
 MS2_PUBLIC MSBitrateController *ms_av_bitrate_controller_new(RtpSession *asession, MSFilter *aenc, RtpSession *vsession, MSFilter *venc);
+
+MS2_PUBLIC MSBitrateController *ms_av_qdelay_bitrate_controller_new(RtpSession *asession, MSFilter *aenc, RtpSession *vsession, MSFilter *venc);
 
 MS2_PUBLIC MSBitrateController *ms_bandwidth_bitrate_controller_new(RtpSession *asession, MSFilter *aenc, RtpSession *vsession, MSFilter *venc);
 #ifdef __cplusplus

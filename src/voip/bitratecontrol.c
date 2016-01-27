@@ -150,6 +150,12 @@ MSBitrateController *ms_av_bitrate_controller_new(RtpSession *asession, MSFilter
 	                                 ms_av_bitrate_driver_new(asession, aenc, vsession, venc));
 }
 
+MSBitrateController *ms_av_qdelay_bitrate_controller_new(RtpSession *asession, MSFilter *aenc, RtpSession *vsession, MSFilter *venc){
+	return ms_bitrate_controller_new(
+	                                 ms_qdelay_rate_control_new(vsession, venc),
+	                                 ms_av_bitrate_driver_new(asession, aenc, vsession, venc));
+}
+
 MSBitrateController *ms_bandwidth_bitrate_controller_new(RtpSession *asession, MSFilter *aenc, RtpSession *vsession, MSFilter *venc){
 	return ms_bitrate_controller_new(
 	                                 ms_stateful_qos_analyzer_new(vsession?vsession:asession),

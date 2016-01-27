@@ -1029,6 +1029,8 @@ int audio_stream_start_from_io(AudioStream *stream, RtpProfile *profile, const c
 		case MSQosAnalyzerAlgorithmStateful:
 			stream->ms.rc=ms_bandwidth_bitrate_controller_new(stream->ms.sessions.rtp_session,stream->ms.encoder, NULL, NULL);
 			break;
+		case MSQosAnalyzerAlgorithmQdelay:
+			break;
 		}
 	}
 

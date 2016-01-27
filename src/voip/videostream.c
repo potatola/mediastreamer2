@@ -562,13 +562,24 @@ static void configure_video_source(VideoStream *stream){
 	if (stream->ms.rc_enable){
 		switch (stream->ms.rc_algorithm){
 		case MSQosAnalyzerAlgorithmSimple:
-			stream->ms.rc=ms_av_bitrate_controller_new(NULL,NULL,stream->ms.sessions.rtp_session,stream->ms.encoder);
+			ms_message("GYF: Simple Rate control enabled.");
+			//stream->ms.rc=ms_av_bitrate_controller_new(NULL,NULL,stream->ms.sessions.rtp_session,stream->ms.encoder);
+			stream->ms.rc=ms_av_qdelay_bitrate_controller_new(NULL,NULL,stream->ms.sessions.rtp_session,stream->ms.encoder);
 			break;
 		case MSQosAnalyzerAlgorithmStateful:
 			stream->ms.rc=ms_bandwidth_bitrate_controller_new(NULL, NULL, stream->ms.sessions.rtp_session,stream->ms.encoder);
 			break;
+		case MSQosAnalyzerAlgorithmQdelay:
+			break;
 		}
 	}
+	else {
+		ms_message("GYF: Rate control NOT enabled.");
+	}
+	//GYF fec module
+	stream->ms.sessions.rtp_session->fec=ms_simple_fec_driver_new(stream->ms.sessions.rtp_session);
+	// @1:fec driver, @2:fec rate, @3:source num
+	ms_fec_driver_set_rate(stream->ms.sessions.rtp_session->fec, 20, 5);
 }
 
 

@@ -271,6 +271,86 @@ MSQosAnalyzer * ms_simple_qos_analyzer_new(RtpSession *session){
 }
 
 
+/**************************************************************************/
+/******************** QDelay based analyzer & driver **********************/
+/**************************************************************************/
+
+static bool_t qdelay_rate_control_process_rtcp(MSQosAnalyzer *objbase, mblk_t *rtcp){
+	MSQDelayQosAnalyzerDriver *obj=(MSQDelayQosAnalyzerDriver*)objbase;
+	rtpstats_t *cur;
+	const report_block_t *rb=NULL;
+	bool_t got_stats=FALSE;
+
+	if (rtcp_is_SR(rtcp)){
+		rb=rtcp_SR_get_report_block(rtcp,0);
+	}else if (rtcp_is_RR(rtcp)){
+		rb=rtcp_RR_get_report_block(rtcp,0);
+	}
+	if (rb && report_block_get_ssrc(rb)==rtp_session_get_send_ssrc(obj->session)){
+
+		obj->curindex++;
+		cur=&obj->stats[obj->curindex % STATS_HISTORY];
+
+		if (obj->clockrate==0){
+			PayloadType *pt=rtp_profile_get_payload(rtp_session_get_send_profile(obj->session),rtp_session_get_send_payload_type(obj->session));
+			if (pt!=NULL) obj->clockrate=pt->clock_rate;
+			else return FALSE;
+		}
+		if (ortp_loss_rate_estimator_process_report_block(objbase->lre,&obj->session->rtp,rb)){
+			cur->lost_percentage=ortp_loss_rate_estimator_get_value(objbase->lre);
+			cur->int_jitter=1000.0f*(float)report_block_get_interarrival_jitter(rb)/(float)obj->clockrate;
+			cur->rt_prop=rtp_session_get_round_trip_propagation(obj->session);
+
+			ms_message("MSQDelayRateControl: lost_percentage=%f, int_jitter=%f ms, rt_prop=%f sec",
+				cur->lost_percentage,cur->int_jitter,cur->rt_prop);
+
+			if(cur->rt_prop > 0.15) {
+				obj->cur_bitrate = 128000;
+			}
+			else {
+				obj->cur_bitrate = 256000;
+			}
+
+			if(cur->lost_percentage > 18) {
+				ms_fec_driver_set_rate(obj->session->fec, 20, 5);
+			}
+			else if(cur->lost_percentage > 8) {
+				ms_fec_driver_set_rate(obj->session->fec, 10, 10);
+			}
+			else {
+				ms_fec_driver_set_rate(obj->session->fec, 0, 0);
+			}
+
+			ms_message("MSQDelayRateControl: bitrate set to %d", obj->cur_bitrate);
+			ms_filter_call_method(obj->venc, MS_FILTER_SET_BITRATE, &obj->cur_bitrate);
+			
+			// never return true, so that the control can be done here and the rate control stops here.
+			got_stats=FALSE; //TRUE;
+		}
+	}
+	return got_stats;
+}
+
+static MSQosAnalyzerDesc qdelay_analyzer_driver_desc={
+	qdelay_rate_control_process_rtcp,
+	NULL,
+	NULL,
+	NULL,
+	NULL
+};
+
+MSQosAnalyzer * ms_qdelay_rate_control_new(RtpSession *session, MSFilter *venc){
+	MSQDelayQosAnalyzerDriver *obj=ms_new0(MSQDelayQosAnalyzerDriver,1);
+	obj->session=session;
+	obj->venc=venc;
+	obj->cur_bitrate=128000;
+	obj->parent.desc=&qdelay_analyzer_driver_desc;
+	obj->parent.type=MSQosAnalyzerAlgorithmQdelay;
+	obj->parent.lre=ortp_loss_rate_estimator_new(LOSS_RATE_MIN_INTERVAL, LOSS_RATE_MIN_TIME, session);
+	return (MSQosAnalyzer*)obj;
+}
+
+
 
 
 /******************************************************************************/
