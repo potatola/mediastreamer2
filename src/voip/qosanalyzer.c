@@ -313,10 +313,10 @@ static bool_t qdelay_rate_control_process_rtcp(MSQosAnalyzer *objbase, mblk_t *r
 				obj->cur_bitrate = 256000;
 			}
 
-			if(cur->lost_percentage > 18) {
+			if(cur->lost_percentage > 5) {
 				ms_fec_driver_set_rate(obj->session->fec, 20, 5);
 			}
-			else if(cur->lost_percentage > 8) {
+			else if(cur->lost_percentage > 5) {
 				ms_fec_driver_set_rate(obj->session->fec, 10, 10);
 			}
 			else {

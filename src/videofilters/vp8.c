@@ -995,6 +995,7 @@ static void dec_process(MSFilter *f) {
 			ms_queue_put(f->outputs[0], dupmsg(s->yuv_msg));
 
 			ms_average_fps_update(&s->fps, (uint32_t)f->ticker->time);
+			ms_message("GYF_FRAME_COUNTER");
 			if (!s->first_image_decoded) {
 				s->first_image_decoded = TRUE;
 				ms_filter_notify_no_arg(f, MS_VIDEO_DECODER_FIRST_IMAGE_DECODED);
