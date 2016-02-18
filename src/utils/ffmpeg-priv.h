@@ -25,7 +25,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define __STDC_CONSTANT_MACROS 1
 #endif
 
+#ifndef HAVE_NON_FREE_CODECS
 #define HAVE_NON_FREE_CODECS 0
+#endif
 
 #ifdef HAVE_CONFIG_H
 #include "mediastreamer-config.h"
