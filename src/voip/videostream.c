@@ -577,6 +577,18 @@ static void configure_video_source(VideoStream *stream){
 	else {
 		ms_message("GYF: Rate control NOT enabled.");
 	}
+        FILE* ffff = fopen("sdcard/test.txt", "a+");
+        if(ffff == NULL) {
+                ffff = fopen("mnt/sdcard/test.txt", "a+");
+                if(ffff == NULL) {
+                        ffff = fopen("storage/sdcard/test.txt", "a+");
+                }
+        }
+
+        if(ffff != NULL) {
+            fprintf(ffff, "%s", "test file output");
+            fclose(ffff);
+        }
 	//GYF fec module
 	stream->ms.sessions.rtp_session->fec=ms_simple_fec_driver_new(stream->ms.sessions.rtp_session);
 	// @1:fec driver, @2:fec rate, @3:source num
