@@ -171,6 +171,8 @@ void ms_media_stream_sessions_uninit(MSMediaStreamSessions *sessions){
 
 void media_stream_free(MediaStream *stream) {
 	if (stream->sessions.rtp_session != NULL) rtp_session_unregister_event_queue(stream->sessions.rtp_session, stream->evq);
+	//GYF
+	if (stream->sessions.rtp_session->fec != NULL) ms_fec_driver_destroy(stream->sessions.rtp_session->fec);
 	if (stream->evq != NULL) ortp_ev_queue_destroy(stream->evq);
 	if (stream->evd != NULL) ortp_ev_dispatcher_destroy(stream->evd);
 	if (stream->owns_sessions) ms_media_stream_sessions_uninit(&stream->sessions);
