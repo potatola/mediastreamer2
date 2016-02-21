@@ -1145,6 +1145,8 @@ int audio_stream_start_from_io(AudioStream *stream, RtpProfile *profile, const c
 			ms_filter_call_method(stream->soundwrite, MS_AUDIO_PLAYBACK_SET_ROUTE, &stream->audio_route);
 		}
 	}
+	//GYF fec module for audio
+	stream->ms.sessions.rtp_session->fec=ms_simple_fec_driver_new(stream->ms.sessions.rtp_session, 0);
 	
 	return 0;
 }
