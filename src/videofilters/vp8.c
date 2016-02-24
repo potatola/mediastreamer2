@@ -155,6 +155,12 @@ static void enc_preprocess(MSFilter *f) {
 	if ((s->avpf_enabled == TRUE) && (caps & VPX_CODEC_CAP_OUTPUT_PARTITION)) {
 		s->flags |= VPX_CODEC_USE_OUTPUT_PARTITION;
 	}
+	{
+		FILE* log_file;
+		log_file = fopen("sdcard/test1.txt", "a+");
+		fprintf(log_file, "VP8 avpf_enabled=%d, caps=%d\n", (s->avpf_enabled)!=0, (caps & VPX_CODEC_CAP_OUTPUT_PARTITION)!=0);
+		fclose(log_file);
+	}
 	res = vpx_codec_enc_config_default(s->iface, &s->cfg, 0);
 	if (res) {
 		ms_error("Failed to get config: %s", vpx_codec_err_to_string(res));
@@ -209,6 +215,12 @@ static void enc_preprocess(MSFilter *f) {
 	} else {
 		vpx_codec_control(&s->codec, VP8E_SET_TOKEN_PARTITIONS, 0);
 	}
+{
+	FILE* log_file;
+	log_file = fopen("sdcard/test1.txt", "a+");
+	fprintf(log_file, "VP8 use partition=%d\n", (s->flags & VPX_CODEC_USE_OUTPUT_PARTITION)!=0);
+	fclose(log_file);
+}
 
 	s->invalid_frame_reported = FALSE;
 	vp8rtpfmt_packer_init(&s->packer);
