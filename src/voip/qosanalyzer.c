@@ -299,6 +299,7 @@ static bool_t qdelay_rate_control_process_rtcp(MSQosAnalyzer *objbase, mblk_t *r
 			else return FALSE;
 		}
 		if (ortp_loss_rate_estimator_process_report_block(objbase->lre,&obj->session->rtp,rb)){
+			FILE* log_file;
 			cur->lost_percentage=ortp_loss_rate_estimator_get_value(objbase->lre);
 			cur->int_jitter=1000.0f*(float)report_block_get_interarrival_jitter(rb)/(float)obj->clockrate;
 			cur->rt_prop=rtp_session_get_round_trip_propagation(obj->session);
@@ -307,14 +308,18 @@ static bool_t qdelay_rate_control_process_rtcp(MSQosAnalyzer *objbase, mblk_t *r
 				cur->lost_percentage,cur->int_jitter,cur->rt_prop);
 
 			if(cur->rt_prop > 0.15) {
-				obj->cur_bitrate = 128000;
+				obj->cur_bitrate = 512000;
 			}
 			else {
-				obj->cur_bitrate = 256000;
+				obj->cur_bitrate = 1024000;
 			}
 
 			ms_message("MSQDelayRateControl: bitrate set to %d", obj->cur_bitrate);
 			ms_filter_call_method(obj->venc, MS_FILTER_SET_BITRATE, &obj->cur_bitrate);
+			log_file = fopen("sdcard/test1.txt", "a+");
+			fprintf(log_file, "lost_percentage=%f, int_jitter=%f ms, rt_prop=%f sec, bitrate set to %d\n",
+				cur->lost_percentage,cur->int_jitter,cur->rt_prop, obj->cur_bitrate);
+			fclose(log_file);
 			
 			// never return true, so that the control can be done here and the rate control stops here.
 			got_stats=FALSE; //TRUE;

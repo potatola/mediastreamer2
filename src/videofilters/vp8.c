@@ -211,7 +211,7 @@ static void enc_preprocess(MSFilter *f) {
 	vpx_codec_control(&s->codec, VP8E_SET_ENABLEAUTOALTREF, !s->avpf_enabled);
 	vpx_codec_control(&s->codec, VP8E_SET_MAX_INTRA_BITRATE_PCT, 400); /*limite iFrame size to 4 pframe*/
 	if (s->flags & VPX_CODEC_USE_OUTPUT_PARTITION) {
-		vpx_codec_control(&s->codec, VP8E_SET_TOKEN_PARTITIONS, 2); /* Output 4 partitions per frame */
+		vpx_codec_control(&s->codec, VP8E_SET_TOKEN_PARTITIONS, 1); /* Output 4 partitions per frame */
 	} else {
 		vpx_codec_control(&s->codec, VP8E_SET_TOKEN_PARTITIONS, 0);
 	}
