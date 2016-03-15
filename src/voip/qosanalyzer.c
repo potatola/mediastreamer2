@@ -316,10 +316,12 @@ static bool_t qdelay_rate_control_process_rtcp(MSQosAnalyzer *objbase, mblk_t *r
 
 			ms_message("MSQDelayRateControl: bitrate set to %d", obj->cur_bitrate);
 			ms_filter_call_method(obj->venc, MS_FILTER_SET_BITRATE, &obj->cur_bitrate);
+#if defined(ANDROID)
 			log_file = fopen("sdcard/test1.txt", "a+");
 			fprintf(log_file, "lost_percentage=%f, int_jitter=%f ms, rt_prop=%f sec, bitrate set to %d\n",
 				cur->lost_percentage,cur->int_jitter,cur->rt_prop, obj->cur_bitrate);
 			fclose(log_file);
+#endif
 			
 			// never return true, so that the control can be done here and the rate control stops here.
 			got_stats=FALSE; //TRUE;
