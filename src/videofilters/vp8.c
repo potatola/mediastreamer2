@@ -552,14 +552,6 @@ static void enc_process(MSFilter *f) {
 				}
 			}
 
-#ifdef AVPF_DEBUG
-			ms_message("VP8 encoder picture_id=%i ***| %s | %s | %s | %s", (int)s->picture_id,
-				(flags & VPX_EFLAG_FORCE_KF) ? "KF " : (flags & VP8_EFLAG_FORCE_GF) ? "GF " :  (flags & VP8_EFLAG_FORCE_ARF) ? "ARF" : "   ",
-				(flags & VP8_EFLAG_NO_REF_GF) ? "NOREFGF" : "       ",
-				(flags & VP8_EFLAG_NO_REF_ARF) ? "NOREFARF" : "        ",
-				(flags & VP8_EFLAG_NO_REF_LAST) ? "NOREFLAST" : "         ");
-#endif
-
 			vp8rtpfmt_packer_process(&s->packer, list, f->outputs[0]);
 
 			/* Handle video starter if AVPF is not enabled. */
