@@ -155,6 +155,8 @@ static void enc_preprocess(MSFilter *f) {
 	if ((s->avpf_enabled == TRUE) && (caps & VPX_CODEC_CAP_OUTPUT_PARTITION)) {
 		s->flags |= VPX_CODEC_USE_OUTPUT_PARTITION;
 	}
+	//GYF
+	s->flags |= VPX_CODEC_USE_OUTPUT_PARTITION;
 #if defined(ANDROID)
 	{
 		FILE* log_file;
@@ -177,8 +179,16 @@ static void enc_preprocess(MSFilter *f) {
 		s->cfg.kf_mode = VPX_KF_DISABLED;
 	} else {
 		s->cfg.kf_mode = VPX_KF_AUTO; /* encoder automatically places keyframes */
-		s->cfg.kf_max_dist = 10 * s->cfg.g_timebase.den; /* 1 keyframe each 10s. */
+		s->cfg.kf_max_dist = 10; /* 1 keyframe each 10s. */
 	}
+#if defined(ANDROID)
+{
+	FILE* log_file;
+	log_file = fopen("sdcard/test1.txt", "a+");
+	fprintf(log_file, "VP8 kf_mode=%d, kf_max_dist=%d\n", s->cfg.kf_mode, s->cfg.kf_max_dist);
+	fclose(log_file);
+}
+#endif
 #if TARGET_IPHONE_SIMULATOR
 	s->cfg.g_threads = 1; /*workaround to remove crash on ipad simulator*/
 #else

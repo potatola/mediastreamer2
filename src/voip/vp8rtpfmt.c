@@ -724,6 +724,9 @@ static void output_partitions_of_frame(Vp8RtpFmtUnpackerCtx *ctx, MSQueue *out, 
 static int output_valid_partitions(Vp8RtpFmtUnpackerCtx *ctx, MSQueue *out) {
 	Vp8RtpFmtFrame *frame;
 	int nb_frames = ms_list_size(ctx->frames_list);
+#if defined(ANDROID)
+	FILE* log_file;
+#endif
 
 	if (nb_frames == 0) return -1;
 	frame = (Vp8RtpFmtFrame *)ms_list_nth_data(ctx->frames_list, 0);
@@ -763,6 +766,11 @@ static int output_valid_partitions(Vp8RtpFmtUnpackerCtx *ctx, MSQueue *out) {
 					/* Drop frames until the first keyframe is successfully received. */
 					ms_warning("VP8 frame dropped because keyframe has not been received yet.");
 				}
+#if defined(ANDROID)
+				log_file = fopen("sdcard/test1.txt", "a+");
+				fprintf(log_file, "VP8 decoder: Drop frame because we are waiting for reference frame.\n");
+				fclose(log_file);
+#endif
 			}
 			break;
 		case Vp8RtpFmtIncompleteFrame:
@@ -782,6 +790,11 @@ static int output_valid_partitions(Vp8RtpFmtUnpackerCtx *ctx, MSQueue *out) {
 					frame->discarded = TRUE;
 				}
 			}
+#if defined(ANDROID)
+			log_file = fopen("sdcard/test1.txt", "a+");
+			fprintf(log_file, "VP8 frame with some partitions missing/invalid.\n");
+			fclose(log_file);
+#endif
 			break;
 		default:
 			/* Drop the invalid frame. */
@@ -791,6 +804,11 @@ static int output_valid_partitions(Vp8RtpFmtUnpackerCtx *ctx, MSQueue *out) {
 			else
 				ms_warning("VP8 invalid frame.");
 			frame->discarded = TRUE;
+#if defined(ANDROID)
+			log_file = fopen("sdcard/test1.txt", "a+");
+			fprintf(log_file, "VP8 invalid frame.\n");
+			fclose(log_file);
+#endif
 			break;
 	}
 

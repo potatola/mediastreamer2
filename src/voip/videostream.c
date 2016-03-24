@@ -580,7 +580,7 @@ static void configure_video_source(VideoStream *stream){
 	//GYF fec module
 	stream->ms.sessions.rtp_session->fec=ms_simple_fec_driver_new(stream->ms.sessions.rtp_session, 1);
 	// @1:fec driver, @2:fec rate, @3:source num
-	ms_fec_driver_set_rate(stream->ms.sessions.rtp_session->fec, 40, 3);
+	ms_fec_driver_set_rate(stream->ms.sessions.rtp_session->fec, 70, 3);
 }
 
 
@@ -854,7 +854,8 @@ static int video_stream_start_with_source_and_output(VideoStream *stream, RtpPro
 		return -1;
 	}
 	if (pt->flags & PAYLOAD_TYPE_RTCP_FEEDBACK_ENABLED) avpf_enabled = TRUE;
-	avpf_enabled = TRUE;
+	//GYF	
+	//avpf_enabled = TRUE;
 
 	if ((cam != NULL) && (cam->desc->encode_to_mime_type != NULL) && (cam->desc->encode_to_mime_type(cam, pt->mime_type) == TRUE)) {
 		stream->source_performs_encoding = TRUE;
