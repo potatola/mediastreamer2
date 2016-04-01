@@ -885,6 +885,7 @@ typedef struct DecState {
 	bool_t avpf_enabled;
 	bool_t freeze_on_error;
 	bool_t ready;
+	FILE *file;
 } DecState;
 
 
@@ -893,6 +894,16 @@ static void dec_init(MSFilter *f) {
 
 	s->iface = vpx_codec_vp8_dx();
 	ms_message("Using %s", vpx_codec_iface_name(s->iface));
+
+#if defined(ANDROID)
+	s->file=fopen("sdcard/test_video.yuv","wb");
+#else
+	s->file=fopen("C:/testyuv.yuv","wb");
+#endif
+	if (s->file==NULL){
+		ms_error("Could not open file");
+		return;
+	}
 
 	s->last_error_reported_time = 0;
 	s->yuv_width = 0;
@@ -1000,12 +1011,17 @@ static void dec_process(MSFilter *f) {
 
 			/* scale/copy frame to destination mblk_t */
 			for (i = 0; i < 3; i++) {
+				int bit_count = 0;
 				uint8_t *dest = s->outbuf.planes[i];
 				uint8_t *src = img->planes[i];
 				int h = img->d_h >> ((i > 0) ? 1 : 0);
 
 				for (j = 0; j < h; j++) {
 					memcpy(dest, src, s->outbuf.strides[i]);
+						
+					bit_count += s->outbuf.strides[i];
+					fwrite(src, s->outbuf.strides[i], 1, s->file);
+
 					dest += s->outbuf.strides[i];
 					src += img->stride[i];
 				}
