@@ -320,6 +320,11 @@ VideoStream *video_stream_new_with_sessions(const MSMediaStreamSessions *session
 }
 
 void video_stream_set_sent_video_size(VideoStream *stream, MSVideoSize vsize){
+#if defined(ANDROID)
+	log_file = fopen("sdcard/test1.txt", "a+");
+	fprintf(log_file, "Setting video size %dx%d on stream [%p]\n", vsize.width, vsize.height,stream);
+	fclose(log_file);
+#endif
 	ms_message("Setting video size %dx%d on stream [%p]", vsize.width, vsize.height,stream);
 	stream->sent_vsize=vsize;
 }

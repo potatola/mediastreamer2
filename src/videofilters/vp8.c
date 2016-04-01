@@ -898,7 +898,7 @@ static void dec_init(MSFilter *f) {
 #if defined(ANDROID)
 	s->file=fopen("sdcard/test_video.yuv","wb");
 #else
-	s->file=fopen("C:/testyuv.yuv","wb");
+	s->file=fopen("D:/testyuv.yuv","wb");
 #endif
 	if (s->file==NULL){
 		ms_error("Could not open file");

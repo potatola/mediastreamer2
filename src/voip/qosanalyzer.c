@@ -279,7 +279,7 @@ MSQosAnalyzer * ms_simple_qos_analyzer_new(RtpSession *session){
 
 static bool_t qdelay_rate_control_process_rtcp(MSQosAnalyzer *objbase, mblk_t *rtcp){
 	MSQDelayQosAnalyzerDriver *obj=(MSQDelayQosAnalyzerDriver*)objbase;
-	rtpstats_t *cur;
+	rtpstats_t *cur, *prev;
 	const report_block_t *rb=NULL;
 	bool_t got_stats=FALSE;
 
@@ -314,7 +314,7 @@ static bool_t qdelay_rate_control_process_rtcp(MSQosAnalyzer *objbase, mblk_t *r
 				obj->cur_bitrate = 1024000;
 			}
 			
-			rtpstats_t *prev=&obj->stats[(STATS_HISTORY+obj->curindex-1) % STATS_HISTORY];
+			prev=&obj->stats[(STATS_HISTORY+obj->curindex-1) % STATS_HISTORY];
 			if(cur->lost_percentage >= 3 && prev->lost_percentage >= 3) {
 				ms_fec_driver_set_rate(obj->session->fec, 1, 0);
 				
