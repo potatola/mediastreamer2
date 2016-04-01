@@ -316,11 +316,11 @@ static bool_t qdelay_rate_control_process_rtcp(MSQosAnalyzer *objbase, mblk_t *r
 			
 			rtpstats_t *prev=&obj->stats[(STATS_HISTORY+obj->curindex-1) % STATS_HISTORY];
 			if(cur->lost_percentage >= 3 && prev->lost_percentage >= 3) {
-				ms_fec_driver_set_rate(obj->session->fec, 1, -1);
+				ms_fec_driver_set_rate(obj->session->fec, 1, 0);
 				
 			}
 			if(cur->lost_percentage < 1 && prev->lost_percentage < 1) {
-				ms_fec_driver_set_rate(obj->session->fec, -1, -1);
+				ms_fec_driver_set_rate(obj->session->fec, 0, 0);
 			}
 
 			ms_message("MSQDelayRateControl: bitrate set to %d", obj->cur_bitrate);
