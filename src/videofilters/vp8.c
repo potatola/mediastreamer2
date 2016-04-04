@@ -954,6 +954,7 @@ static void dec_uninit(MSFilter *f) {
 	vp8rtpfmt_unpacker_uninit(&s->unpacker);
 	vpx_codec_destroy(&s->codec);
 	if (s->yuv_msg) freemsg(s->yuv_msg);
+	fclose(s->file);
 	ms_queue_flush(&s->q);
 	ms_free(s);
 }
