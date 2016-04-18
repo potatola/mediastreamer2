@@ -120,7 +120,7 @@ RtpSession * ms_create_duplex_rtp_session(const char* local_ip, int loc_rtp_port
 	rtp_session_signal_connect(rtpr, "timestamp_jump", (RtpCallback)rtp_session_resync, NULL);
 	rtp_session_signal_connect(rtpr, "ssrc_changed", (RtpCallback)rtp_session_resync, NULL);
 	rtp_session_set_ssrc_changed_threshold(rtpr, 0);
-	rtp_session_set_rtcp_report_interval(rtpr, 2500);	/* At the beginning of the session send more reports. */
+	rtp_session_set_rtcp_report_interval(rtpr, 300);	/* At the beginning of the session send more reports. */
 	rtp_session_set_multicast_loopback(rtpr,TRUE); /*very useful, specially for testing purposes*/
 	disable_checksums(rtp_session_get_rtp_socket(rtpr));
 	return rtpr;
@@ -308,7 +308,7 @@ void media_stream_iterate(MediaStream *stream){
 	/*we choose to update the quality indicator as much as possible, since local statistics can be computed realtime. */
 	if (stream->state==MSStreamStarted){
 		if (stream->is_beginning && (curtime-stream->start_time>15)){
-			rtp_session_set_rtcp_report_interval(stream->sessions.rtp_session,5000);
+			rtp_session_set_rtcp_report_interval(stream->sessions.rtp_session,300);
 			stream->is_beginning=FALSE;
 		}
 		if (stream->qi && curtime>stream->last_iterate_time) ms_quality_indicator_update_local(stream->qi);

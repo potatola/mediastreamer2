@@ -1029,7 +1029,7 @@ static void dec_process(MSFilter *f) {
 			ms_queue_put(f->outputs[0], dupmsg(s->yuv_msg));
 
 			ms_average_fps_update(&s->fps, (uint32_t)f->ticker->time);
-			ms_message("GYF_FRAME_COUNTER");
+			ms_message("GYF_FRAME_COUNTER, %d", (uint32_t)f->ticker->time);
 #if defined(ANDROID)
 			FILE* log_file;
 			log_file = fopen("sdcard/test1.txt", "a+");
