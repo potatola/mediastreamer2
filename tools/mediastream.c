@@ -873,6 +873,11 @@ void setup_media_streams(MediastreamDatas* args) {
 			args->zoom_cx, args->zoom_cy };
 		MSMediaStreamIO iodef = MS_MEDIA_STREAM_IO_INITIALIZER;
 
+#if defined(ANDROID)
+		FILE* log_file;
+		log_file = fopen("sdcard/test1.txt", "w");
+		fclose(log_file);
+#endif
 		if (args->eq){
 			ms_fatal("Cannot put an audio equalizer in a video stream !");
 			exit(-1);
