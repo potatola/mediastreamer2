@@ -990,6 +990,7 @@ static void dec_process(MSFilter *f) {
 		}
 
 		/* Get decoded frame */
+		iter = NULL;
 		if ((img = vpx_codec_get_frame(&s->codec, &iter))) {
 			int i, j;
 			int reference_updates = 0;

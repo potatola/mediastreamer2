@@ -730,6 +730,7 @@ static int output_valid_partitions(Vp8RtpFmtUnpackerCtx *ctx, MSQueue *out) {
 
 	if (nb_frames == 0) return -1;
 	frame = (Vp8RtpFmtFrame *)ms_list_nth_data(ctx->frames_list, 0);
+	ms_message("output partitions: pid=0x%04x", frame->pictureid);
 	switch (frame->error) {
 		case Vp8RtpFmtOk:
 			if (frame->keyframe == TRUE) {
@@ -759,12 +760,12 @@ static int output_valid_partitions(Vp8RtpFmtUnpackerCtx *ctx, MSQueue *out) {
 				if (ctx->waiting_for_reference_frame == TRUE) {
 					/* Do not decode frames while we are waiting for a reference frame. */
 					if (frame->pictureid_present == TRUE)
-						ms_warning("VP8 decoder: Drop frame because we are waiting for reference frame: pictureID=%i", (int)frame->pictureid);
+						ms_message("VP8 decoder: Drop frame because we are waiting for reference frame: pictureID=%i", (int)frame->pictureid);
 					else
-						ms_warning("VP8 decoder: Drop frame because we are waiting for reference frame.");
+						ms_message("VP8 decoder: Drop frame because we are waiting for reference frame.");
 				} else {
 					/* Drop frames until the first keyframe is successfully received. */
-					ms_warning("VP8 frame dropped because keyframe has not been received yet.");
+					ms_message("VP8 frame dropped because keyframe has not been received yet.");
 				}
 #if defined(ANDROID)
 				log_file = fopen("sdcard/test1.txt", "a+");
@@ -784,9 +785,9 @@ static int output_valid_partitions(Vp8RtpFmtUnpackerCtx *ctx, MSQueue *out) {
 				} else {
 					/* Drop the frame for which some partitions are missing/invalid. */
 					if (frame->pictureid_present == TRUE)
-						ms_warning("VP8 frame with some partitions missing/invalid: pictureID=%i", (int)frame->pictureid);
+						ms_message("VP8 frame with some partitions missing/invalid: pictureID=%i", (int)frame->pictureid);
 					else
-						ms_warning("VP8 frame with some partitions missing/invalid.");
+						ms_message("VP8 frame with some partitions missing/invalid.");
 					frame->discarded = TRUE;
 				}
 			}
@@ -800,9 +801,9 @@ static int output_valid_partitions(Vp8RtpFmtUnpackerCtx *ctx, MSQueue *out) {
 			/* Drop the invalid frame. */
 
 			if (frame->pictureid_present == TRUE)
-				ms_warning("VP8 invalid frame: pictureID=%i", (int)frame->pictureid);
+				ms_message("VP8 invalid frame: pictureID=%i", (int)frame->pictureid);
 			else
-				ms_warning("VP8 invalid frame.");
+				ms_message("VP8 invalid frame.");
 			frame->discarded = TRUE;
 #if defined(ANDROID)
 			log_file = fopen("sdcard/test1.txt", "a+");
