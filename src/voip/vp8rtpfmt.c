@@ -730,7 +730,8 @@ static int output_valid_partitions(Vp8RtpFmtUnpackerCtx *ctx, MSQueue *out) {
 
 	if (nb_frames == 0) return -1;
 	frame = (Vp8RtpFmtFrame *)ms_list_nth_data(ctx->frames_list, 0);
-	ms_message("output partitions: pid=0x%04x", frame->pictureid);
+	ms_message("output partitions: pid=0x%04x(%d), key=%d,ref=%d", frame->pictureid
+		, frame->pictureid, frame->keyframe, frame->reference);
 	switch (frame->error) {
 		case Vp8RtpFmtOk:
 			if (frame->keyframe == TRUE) {
