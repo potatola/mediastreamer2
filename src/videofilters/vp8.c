@@ -474,7 +474,6 @@ static void enc_process(MSFilter *f) {
 		if ((s->avpf_enabled != TRUE) && ms_video_starter_need_i_frame(&s->starter, f->ticker->time)) {
 			s->force_keyframe = TRUE;
 		}
-		ms_message("force_keyframe=%d", s->force_keyframe);
 		if (s->force_keyframe == TRUE) {
 			ms_message("Forcing vp8 key frame for filter [%p]", f);
 			flags = VPX_EFLAG_FORCE_KF;
@@ -482,6 +481,7 @@ static void enc_process(MSFilter *f) {
 			if (s->frame_count % 15 == 0) s->force_keyframe = TRUE;
 			enc_fill_encoder_flags(s, &flags);
 		}
+		ms_message("force_keyframe=%d", s->force_keyframe);
 
 #ifdef AVPF_DEBUG
 		ms_message("VP8 encoder frames state:");
