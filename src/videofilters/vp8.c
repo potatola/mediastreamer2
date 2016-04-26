@@ -181,14 +181,6 @@ static void enc_preprocess(MSFilter *f) {
 		s->cfg.kf_mode = VPX_KF_AUTO; /* encoder automatically places keyframes */
 		s->cfg.kf_max_dist = 10; /* 1 keyframe each 10s. */
 	}
-#if defined(ANDROID)
-{
-	FILE* log_file;
-	log_file = fopen("sdcard/test1.txt", "a+");
-	fprintf(log_file, "VP8 kf_mode=%d, kf_max_dist=%d\n", s->cfg.kf_mode, s->cfg.kf_max_dist);
-	fclose(log_file);
-}
-#endif
 #if TARGET_IPHONE_SIMULATOR
 	s->cfg.g_threads = 1; /*workaround to remove crash on ipad simulator*/
 #else
@@ -482,11 +474,12 @@ static void enc_process(MSFilter *f) {
 		if ((s->avpf_enabled != TRUE) && ms_video_starter_need_i_frame(&s->starter, f->ticker->time)) {
 			s->force_keyframe = TRUE;
 		}
+		ms_message("force_keyframe=%d", s->force_keyframe);
 		if (s->force_keyframe == TRUE) {
 			ms_message("Forcing vp8 key frame for filter [%p]", f);
 			flags = VPX_EFLAG_FORCE_KF;
 		} else if (s->avpf_enabled == TRUE) {
-			if (s->frame_count == 0) s->force_keyframe = TRUE;
+			if (s->frame_count % 15 == 0) s->force_keyframe = TRUE;
 			enc_fill_encoder_flags(s, &flags);
 		}
 
