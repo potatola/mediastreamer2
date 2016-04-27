@@ -814,6 +814,7 @@ static void apply_bitrate_limit(VideoStream *stream, PayloadType *pt) {
 	MSVideoConfiguration *vconf_list = NULL;
 	
 	if (stream->ms.target_bitrate<=0) {
+		pt->normal_bitrate = 512000;
 		stream->ms.target_bitrate=pt->normal_bitrate;
 		ms_message("target bitrate not set for stream [%p] using payload's bitrate is %i",stream,stream->ms.target_bitrate);
 	}
