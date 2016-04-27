@@ -307,21 +307,7 @@ static bool_t qdelay_rate_control_process_rtcp(MSQosAnalyzer *objbase, mblk_t *r
 			ms_message("MSQDelayRateControl: lost_percentage=%f, int_jitter=%f ms, rt_prop=%f sec",
 				cur->lost_percentage,cur->int_jitter,cur->rt_prop);
 
-			if(cur->rt_prop > 0.15) {
-				obj->cur_bitrate = 512000;
-			}
-			else {
-				obj->cur_bitrate = 1024000;
-			}
-			
-			prev=&obj->stats[(STATS_HISTORY+obj->curindex-1) % STATS_HISTORY];
-			if(cur->lost_percentage >= 3 && prev->lost_percentage >= 3) {
-				ms_fec_driver_set_rate(obj->session->fec, 1, 0);
-				
-			}
-			if(cur->lost_percentage < 1 && prev->lost_percentage < 1) {
-				ms_fec_driver_set_rate(obj->session->fec, 0, 0);
-			}
+			obj->cur_bitrate = 512000;
 
 			ms_message("MSQDelayRateControl: bitrate set to %d", obj->cur_bitrate);
 			ms_filter_call_method(obj->venc, MS_FILTER_SET_BITRATE, &obj->cur_bitrate);
