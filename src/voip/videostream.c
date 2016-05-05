@@ -584,10 +584,8 @@ static void configure_video_source(VideoStream *stream){
 		ms_message("GYF: Rate control NOT enabled.");
 	}
 	//GYF fec module
-	stream->ms.sessions.rtp_session->fec=ms_simple_fec_driver_new(stream->ms.sessions.rtp_session, 1);
-	// @1:fec driver, @2:fec rate, @3:source num
-	ms_fec_driver_set_rate(stream->ms.sessions.rtp_session->fec, 0, 5);
-	ms_fec_driver_set_rate(stream->ms.sessions.rtp_session->fec, 1, 0);
+	//stream->ms.sessions.rtp_session->fec=ms_simple_fec_driver_new(stream->ms.sessions.rtp_session, 1);
+	stream->ms.sessions.rtp_session->fec=ms_simple_ew_fec_driver_new(stream->ms.sessions.rtp_session, 1);
 }
 
 
