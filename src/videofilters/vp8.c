@@ -611,6 +611,13 @@ static int enc_set_configuration(MSFilter *f, void *data) {
 
 	ms_message("Video configuration set: bitrate=%dbits/s, fps=%f, vsize=%dx%d for encoder [%p]"	, s->vconf.required_bitrate,
 		   s->vconf.fps, s->vconf.vsize.width, s->vconf.vsize.height, f);
+#if defined(ANDROID) && defined(FEC_DEBUG)
+	FILE* log_file;
+	log_file = fopen("sdcard/test1.txt", "a+");
+	fprintf(log_file, "Video configuration set: bitrate=%dbits/s, fps=%f, vsize=%dx%d for encoder [%p]\n"	, s->vconf.required_bitrate,
+		   s->vconf.fps, s->vconf.vsize.width, s->vconf.vsize.height, f);
+	fclose(log_file);
+#endif
 	return 0;
 }
 
